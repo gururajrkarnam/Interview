@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven3'
-        jdk 'JDK11'
+        maven 'MyMaven'
+        jdk 'MyJava'
     }
 
     triggers {
@@ -15,13 +15,13 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                url: 'https://github.com/your-repo/testng-framework.git'
+                url: 'https://github.com/gururajrkarnam/Interview.git'
             }
         }
 
         stage('Build & Execute') {
             steps {
-                bat 'https://github.com/gururajrkarnam/Interview.git'
+                bat 'mvn clean test -DsuiteXmlFile=testng.xml'
             }
         }
 
