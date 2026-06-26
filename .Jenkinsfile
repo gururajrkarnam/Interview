@@ -3,7 +3,7 @@ pipeline {
 
     tools {
         maven 'Maven3'
-        jdk 'JDK11'
+        jdk 'JDK17'
     }
 
     triggers {
@@ -14,32 +14,43 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                checkout scm
+                git branch: 'main',
+                url: 'https://github.com/your-repo/testng-framework.git'
             }
         }
 
-        stage('Build & Execute Tests') {
+        stage('Build & Execute') {
             steps {
-                bat 'mvn clean test'
+                bat 'https://github.com/gururajrkarnam/Interview.git'
+            }
+        }
+
+        stage('Publish TestNG Report') {
+            steps {
+                publishHTML([
+                    reportDir: 'test-output',
+                    reportFiles: 'emailable-report.html',
+                    reportName: 'TestNG Report',
+                    keepAll: true
+                ])
+            }
+        }
+
+        stage('Publish Extent Report') {
+            steps {
+                publishHTML([
+                    reportDir: 'reports',
+                    reportFiles: 'ExtentReport.html',
+                    reportName: 'Extent Report',
+                    keepAll: true
+                ])
             }
         }
     }
 
     post {
-
         always {
-            archiveArtifacts artifacts: 'test-output/**/*', allowEmptyArchive: true
-
-            junit testResults: 'target/surefire-reports/*.xml',
-                  allowEmptyResults: true
-        }
-
-        success {
-            echo 'Tests executed successfully'
-        }
-
-        failure {
-            echo 'Tests failed'
+            archiveArtifacts artifacts: '**/test-output/**/*'
         }
     }
 }
